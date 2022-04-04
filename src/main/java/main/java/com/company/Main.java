@@ -34,22 +34,31 @@ public class Main {
         System.out.print("Test data before sorting:\n");
         testDataForParseAndSort.forEach(i -> System.out.print(i + "   "));
         DocumentNumberSorter.sortDocumentNumbers(testDataForParseAndSort, patternList);
+        System.out.print("\nChanges according comments:\n");//новый метод исходя из замечаний
+        System.out.print("Test data before sorting:\n");
+        List<String> testDataForParseAndSortWithNotExistingPatterns = TestDataForNumberParsingCreator.createTestDataWithNotExistingPatterns(500, 100, patternList);
+        testDataForParseAndSortWithNotExistingPatterns.forEach(i -> System.out.print(i + "   "));
+        DocumentNumberSorter.sortDocumentNumbersWithoutDistributionByPattern(testDataForParseAndSortWithNotExistingPatterns, patternList);
         /*
         Задание №2
         Текущая реализация сделана с учетом случайного расположения хранения карточек
-        и исходя из предложенных тестовый данных - инициатором может являться лишь один человек
+        и исходя из предложенных тестовых данных - инициатором может являться лишь один человек
          */
         RegistrationControlCard registrationControlCard =
-            TestDataRegistrationControlCard.createRegistrationControlCard();
-        List<PersonCard> personCards = TestDataPersonCreator.createPersonCards(10);
+            TestDataRegistrationControlCard.createRegistrationControlCard();//создание тестовых данных для первой таблице в предложенном документе
+        List<PersonCard> personCards = TestDataPersonCreator.createPersonCards(10);//создание 10 карточек в которых первое поле - уникальный идентификатор,
+        // второе - объект хранящий информацию о нём (в дальнейшем будет необходимо лишь имя, фамилия, отчество)
         List<PersonalResolutionCard> personalResolutionCard =
             TestDataResolutionPersonalCard.createResolutionPersonalCard(personCards);
+        //создание карточек резолюций, объект состоит из полей аналогичным второму типу таблиц
+        //из предложенного шаблона для вывода (за исключением имен автора и исполнителя, тут они заменены на id, согласно карточкам созданным выше)
+        // и с добавлением идентификатора самой карточки резолюции
 
         List<Resolution> resolutionList = new ArrayList<>();
         for (PersonalResolutionCard resolutionCard : personalResolutionCard) {
             resolutionList.add(new Resolution(resolutionCard.getAuthorId(), resolutionCard.getExecutorId()));
         }
-
+        //получение из списка карточек резолюций лишь id автора и исполнителя
         ResponsibilityTree responsibilityTree =
             ResolutionConverter.convertResolutionListToResponsibilitiesTree(resolutionList);
         new ResponsibilityTree().makeNodeIndexes(responsibilityTree.root);
